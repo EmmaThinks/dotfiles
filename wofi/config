@@ -1,0 +1,13 @@
+mode=drun
+show=drun
+prompt=Search...
+width=700
+height=550
+location=center
+allow_images=true
+image_size=24
+insensitive=true
+no_actions=true
+term=alacritty
+hide_scroll=true
+matching=fuzzy
