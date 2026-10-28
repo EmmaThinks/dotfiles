@@ -1,0 +1,133 @@
+(defpoll clock_time :interval "1s"
+	"date '+%H:%M:%S  %A, %B %d %Y'")
+(deflisten active_ws :initial "1"
+	"scripts/get_workspaces.sh")
+
+(deflisten server :interval "5m" :initial "false"
+	"scripts/server.sh")
+
+(deflisten net_script
+	"scripts/network.sh")
+
+(defpoll current_volume :interval "1s"
+  "pamixer --get-volume || echo 50")
+
+
+;; media
+(defpoll media_title :interval "2s" "playerctl metadata --format '{{title}} • {{artist}}' 2>/dev/null || echo ''")
+(defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
+(deflisten cava_bars :initial "" "~/.config/eww/scripts/cava.sh")
+
+;; own special feature to check if my server is connected
+(defwidget server_status []
+	(box	:class {server ? "server-up" : "server-down"}
+		(label :text {server ? "192.168.1.71 UP" : "192.168.1.71 DOWN" })))
+
+(defwidget networking []
+	(box :class {net_script ? "net-connected" : "net-disconnected"}
+		(label :text net_script)))
+
+(defwidget media_cava []
+  (eventbox :class "center-box" :orientation "h" :space-evenly false :halign "center" :spacing 8 :cursor "pointer"
+    (revealer :transition "crossfade" :reveal {media_title != ""} :duration "300ms"
+      (button :class "media-pill" :onclick "playerctl play-pause"
+        (box :orientation "h" :space-evenly false :spacing 8 
+          (label :class "media-icon" :text {media_status == "Playing" ? "󰐊" : "󰏤"})
+          (label :class "media-text" :limit-width 30 :text media_title)
+          (label :class "cava-bars" :show-truncated false :text cava_bars))))))
+
+
+(defwidget workspaces []
+	(box :class "workspaces" :orientation "h" :spacing 6 :space-evenly false
+		(button :class {active_ws == "1" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 1 })'" "1")
+
+		(button :class {active_ws == "2" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 2 })'" "2")
+
+		(button :class {active_ws == "3" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 3 })'" "3")
+
+		(button :class {active_ws == "4" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 4 })'" "4")
+
+		(button :class {active_ws == "5" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 5 })'" "5")
+
+		(button :class {active_ws == "6" ? "ws-active" : "ws-inactive"}
+			:onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = 6 })'" "6")))
+
+;; don't worry about this too much
+(defwidget left_dp []
+	(box :class "left" :orientation "h" :halign "start" :space-evenly false
+		(workspaces)))
+
+(defwidget center_dp []
+	(box :class "center" :orientation "h" :halign "center"
+		(media_cava)))
+
+(defwidget right_dp [] 
+	(box :class "right" :orientation "h" :halign "end" :space-evenly false
+		(label :text clock_time :class "clock")
+		(label :class "separator" :text "│")
+		(systray :class "systray" :icon-size 20 :prepend-new true)
+		(label :class "separator" :text "│")
+		(label :class "volume" :text current_volume :spacing 10)))
+
+(defwidget left_22 []
+	(box :class "left" :orientation "h" :halign "start" :space-evenly false
+		(networking)
+		(label :class "separator" :text "│")))
+
+(defwidget center_22 []
+	(box :class "center" :orientation "h" :halign "center"
+		(media_cava))) 
+
+(defwidget right_22 [] 
+	(box :class "right" :orientation "h" :halign "end" :space-evenly false
+		(label :text clock_time :class "clock")
+		(label :class "separator" :text "│")
+		(server_status)
+		(label :class "separator" :text "│")
+		(label :text "CPU ${round(EWW_CPU.avg, 0)}%")
+		(label :class "separator" :text "│")
+		(label :text "RAM ${round(EWW_RAM.used_mem / 1024 / 1024, 0)} MB")))
+
+;; normal mode (workspaces, hour, weather, etc)
+(defwidget bar_dp []
+	(centerbox :class "bar-cont-dp"
+	(left_dp)
+	(center_dp)
+	(right_dp)))
+
+;; relevant information (tray, ram, cpu n other stuff)
+(defwidget bar_22 []
+	(centerbox :class "bar-cont-22"
+	(left_22)
+	(center_22)
+	(right_22)))
+
+
+;; window initalization
+(defwindow bar_dp 
+	:monitor "DP"
+	:exclusive true
+	:stacking "fg"
+	:geometry (geometry	:x "0%"
+				:y "0px"
+				:width "100%"
+				:height "32px"
+				:anchor "bottom center")
+
+(bar_dp))
+
+(defwindow bar_22
+	:monitor "22N1"
+	:exclusive true
+	:stracking "fg"
+	:geometry (geometry	:x "0%"
+				:y "0px"
+				:width "100%"
+				:height "32px"
+				:anchor "bottom center")
+(bar_22))

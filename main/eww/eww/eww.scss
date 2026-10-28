@@ -1,0 +1,141 @@
+// Paleta Everforest Dark Hard
+$bg-primary: rgba(30, 35, 38, 0.95);    
+$bg-surface: #272e33;
+$border-color: rgba(58, 69, 74, 0.8);  
+$text-dim: #7a8478;
+$text-light: #d3c6aa;
+$accent-green: #a7c080;
+$accent-yellow: #dbbc7f;
+$success: #b2c98f;
+$error: #f85552;
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 15px;
+}
+
+.bar-cont-dp, .bar-cont-22 {
+  background-color: $bg-surface;
+  padding: 0 16px;
+  color: $text-light;
+}
+
+.clock {
+  font-weight: bold;
+}
+
+.workspaces {
+  padding: 0 4px;
+
+  button {
+    min-width: 18px;
+    min-height: 18px;
+    margin: 0 2px;
+ 
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ws-inactive {
+
+    &:hover {
+      background-color: #45475a;
+    }
+  }
+
+  .ws-active {
+    border-top: 2 solid $accent-green;
+    min-width: 38px; 
+    background-color: $bg-primary;
+  }
+}
+
+.separator {
+  margin: 0 10px;
+}
+
+/* server variables (for colors) */
+.server-up {
+  color: $success; 
+}
+
+.server-down {
+  color: $error; 
+  font-weight: bold;
+}
+
+.net-connected {}
+
+.net-disconnected {  
+  color: $error;
+  font-weight: bold;
+  background-color: $bg-primary;
+}
+
+.systray {
+  min-height: 20px;
+  min-width: 30px;
+  padding: 0 10px;
+}
+
+.media-pill {
+  min-width: 370px;
+  background-color: $bg-surface;
+  padding: 2px 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $accent-green;
+    background-color: $accent-green;
+
+    .media-icon {
+      color: $bg-surface;
+    }
+    .media-text {
+      color: $bg-surface;
+    }
+    .cava-bars {
+      color: $bg-surface;
+    }
+  }
+
+  .media-icon {
+    color: $accent-yellow;
+  }
+  .media-text {
+    color: $text-light;
+  }
+  .cava-bars {
+    color: $accent-green;
+    font-size: 13px;
+    margin-left: 2px;
+    letter-spacing: 1px;
+  }
+}
+
+.controls-container {
+  padding: 0 4px;
+}
+
+.toggle-btn {
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background-color: #313244;
+  color: #cdd6f4;
+  margin-left: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #45475a;
+  }
+
+  &.active {
+    background-color: #cba6f7;
+    color: #11111b;
+  }
+}
+
+.volume {
+  font-weight: bold;
+}

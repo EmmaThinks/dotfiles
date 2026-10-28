@@ -1,0 +1,13 @@
+# Logs y temporales
+*.log
+*.tmp
+*.swp
+*~
+
+# Sockets o cachés
+__pycache__/
+.cache/
+
+# Archivos de credenciales o secretos locales si existieran
+*.key
+*.token
